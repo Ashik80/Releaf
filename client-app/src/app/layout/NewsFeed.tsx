@@ -1,24 +1,31 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react'
-import { Item, Segment, Image, Feed, Icon, Button } from 'semantic-ui-react'
-import PostStore from '../../stores/postStore'
+import React, { Fragment, useContext, useEffect, SyntheticEvent, useState } from 'react'
+import { Segment, Feed, Icon, Button } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { IPost } from '../models/post'
 import LoadingComponent from '../common/loader/LoadingComponent'
 import { RootStoreContext } from '../../stores/rootStore'
+import PostActions from './PostActions'
+import {format} from 'date-fns'
 
 const NewsFeed = () => {
     const rootStore = useContext(RootStoreContext)
-    const { loadPosts, postsRegistry, pageLoader } = rootStore.postsStore
+    const { loadPosts, pageLoader, likePost, postsByDate, disableLike } = rootStore.postsStore
+    const [target, setTarget] = useState('')
+
+    const likeHandle = (event: SyntheticEvent<HTMLButtonElement>) => {
+        likePost(event.currentTarget.name)
+        setTarget(event.currentTarget.name)
+    }
 
     useEffect(() => {
         loadPosts()
     }, [loadPosts])
 
-    if(pageLoader) return <LoadingComponent text="Loading Feed..." />
+    if (pageLoader) return <LoadingComponent text="Loading Feed..." />
 
     return (
         <Fragment>
-            {Array.from(postsRegistry.values()).map((post: IPost) => (
+            {postsByDate.map((post: IPost) => (
                 <Segment key={post.postId}>
                     <Feed>
                         <Feed.Event>
@@ -26,24 +33,22 @@ const NewsFeed = () => {
                             <Feed.Content>
                                 <Feed.Summary>
                                     {post.appUser.displayName}
-                                    <Feed.Date>{post.postTime}</Feed.Date>
-                                    <Button icon='ellipsis horizontal' floated='right' style={{backgroundColor: "white", border: 'none', padding: 0, paddingRight: 5}} />
+                                    <Feed.Date>{format(post.postTime, "h:mm aaaa, eee, do MMM, yyyy")}</Feed.Date>
+                                    <Button icon='ellipsis horizontal' floated='right' style={{ backgroundColor: "white", border: 'none', padding: 0, paddingRight: 5 }} />
                                 </Feed.Summary>
                                 <Feed.Extra text>
                                     {post.text}
                                 </Feed.Extra>
-                                <Feed.Meta>
-                                    <Feed.Like>
-                                        <Icon name='like' />5 people finds this helpful
-                                    </Feed.Like>
-                                </Feed.Meta>
+                                {post.likes.length > 0 && (
+                                    <Feed.Meta>
+                                        <Feed.Like>
+                                            <Icon name='lightbulb' color='yellow' />{post.likes.length} {post.likes.length === 1 ? "person finds" : "people find"} this helpful
+                                        </Feed.Like>
+                                    </Feed.Meta>
+                                )}
                             </Feed.Content>
                         </Feed.Event>
-                        <Button.Group fluid>
-                            <Button icon='lightbulb' content='Helpful' />
-                            <Button icon='comment' content='Comment' />
-                            <Button icon='share' content='Share' />
-                        </Button.Group>
+                        <PostActions disable={disableLike} post={post} likeHandle={likeHandle} target={target} />
                     </Feed>
                 </Segment>
             ))}

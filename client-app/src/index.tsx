@@ -3,15 +3,17 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import App from './app/App';
 import './app/styles.css';
-import { Router, BrowserRouter } from 'react-router-dom';
-import {createBrowserHistory} from 'history'
+import { Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history'
+import 'react-toastify/dist/ReactToastify.min.css'
+import 'mobx-react-lite/batchingForReactDom'
 
-// export const history = createBrowserHistory()
+export const history = createBrowserHistory()
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router history={history}>
     <App />
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('root')
 );
 

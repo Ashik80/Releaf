@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using API.Middleware;
+using Application.Interfaces;
 using Application.Posts;
 using Application.Users;
 using AutoMapper;
 using Domain;
+using FluentValidation.AspNetCore;
+using Infrastructure.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +25,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
 namespace API
@@ -36,15 +42,24 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
-            services.AddMediatR(typeof(Login.Handler).Assembly);
-            services.AddAutoMapper(typeof(List.Handler).Assembly);
+            services.AddControllers(opt => {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            }).AddFluentValidation(opt => {
+                opt.RegisterValidatorsFromAssemblyContaining<Login>();
+            });
 
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("ReleafConnection"));
             });
+
+            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddAutoMapper(typeof(List.Handler).Assembly);
+
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
             var builder = services.AddIdentityCore<AppUser>(opt =>
             {
@@ -54,7 +69,16 @@ namespace API
             identityBuilder.AddEntityFrameworkStores<DataContext>();
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
-            services.AddAuthentication();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token"]));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = key,
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false
+                };
+            });
 
             services.AddCors(opt =>
             {

@@ -1,12 +1,22 @@
 export interface IPost {
     postId: string,
     text: string,
-    postTime: string,
+    postTime: Date,
     appUser: IUser,
-    likes?: number
+    likes: ILike[],
+    isLiked: boolean 
 }
 
 export interface IUser {
     userName: string,
     displayName: string
+}
+
+export interface ILike {
+    userName: string,
+    displayName: string
+}
+
+export interface IPostFormValues {
+    text: string
 }

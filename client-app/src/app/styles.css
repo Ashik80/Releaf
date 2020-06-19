@@ -23,3 +23,7 @@ h1.ui.inverted.header{
   font-size: 3em;
 }
 
+.ui.segment.postForm{
+  position: fixed;
+}
+

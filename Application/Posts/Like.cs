@@ -71,15 +71,6 @@ namespace Application.Posts
 
                 var postDto = mapper.Map<Post, PostDto>(post);
 
-                // var postDto = new PostDto
-                // {
-                //     PostId = post.PostId,
-                //     Text = post.Text,
-                //     Likes = mapper.Map<ICollection<Domain.Like>, ICollection<LikeDto>>(post.Likes),
-                //     PostTime = post.PostTime,
-                //     AppUser = mapper.Map<AppUser, UserDto>(post.AppUser)
-                // };
-
                 if (result) return postDto;
 
                 throw new Exception("Problem Liking the post");

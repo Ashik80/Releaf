@@ -27,7 +27,8 @@ namespace Application.Posts
             {
                 var posts = await context.Posts
                     .Include(p => p.AppUser)
-                    .Include(p => p.Likes)    
+                    .Include(p => p.Likes)
+                        .ThenInclude(l => l.AppUser)  
                     .ToListAsync();
 
                 var postdto = mapper.Map<List<Post>, List<PostDto>>(posts);

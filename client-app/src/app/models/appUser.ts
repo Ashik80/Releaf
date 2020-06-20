@@ -9,3 +9,10 @@ export interface ILoginFormValues {
     email: string,
     password: string
 }
+
+export interface IRegisterFormValues {
+    email: string,
+    userName: string,
+    displayName: string,
+    password: string
+}

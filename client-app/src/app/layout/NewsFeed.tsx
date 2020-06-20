@@ -6,10 +6,11 @@ import LoadingComponent from '../common/loader/LoadingComponent'
 import { RootStoreContext } from '../../stores/rootStore'
 import PostActions from './PostActions'
 import {format} from 'date-fns'
+import { Link } from 'react-router-dom'
 
 const NewsFeed = () => {
     const rootStore = useContext(RootStoreContext)
-    const { loadPosts, pageLoader, likePost, postsByDate, disableLike } = rootStore.postsStore
+    const { loadPosts, pageLoader, likePost, postsByDate, disableLike, postsRegistry } = rootStore.postsStore
     const [target, setTarget] = useState('')
 
     const likeHandle = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -19,9 +20,12 @@ const NewsFeed = () => {
 
     useEffect(() => {
         loadPosts()
-    }, [loadPosts])
+        return (() => {
+            postsRegistry.clear()
+        })
+    }, [loadPosts, postsRegistry])
 
-    if (pageLoader) return <LoadingComponent text="Loading Feed..." />
+    if (pageLoader) return <Segment style={{height: 150}}><LoadingComponent text="Loading Feed..." /></Segment>
 
     return (
         <Fragment>
@@ -32,7 +36,11 @@ const NewsFeed = () => {
                             <Feed.Label image='/Images/user.png' />
                             <Feed.Content>
                                 <Feed.Summary>
-                                    {post.appUser.displayName}
+                                    <Link
+                                        to={`/profile/${post.appUser.userName}`}
+                                    >
+                                            {post.appUser.displayName}
+                                    </Link>
                                     <Feed.Date>{format(post.postTime, "h:mm aaaa, eee, do MMM, yyyy")}</Feed.Date>
                                     <Button icon='ellipsis horizontal' floated='right' style={{ backgroundColor: "white", border: 'none', padding: 0, paddingRight: 5 }} />
                                 </Feed.Summary>

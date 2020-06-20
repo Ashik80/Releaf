@@ -1,6 +1,6 @@
 import React, { useContext, Fragment } from 'react'
 import { Menu, Container, Header, Icon, Segment, Image, Dropdown } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { RootStoreContext } from '../../stores/rootStore'
 import { observer } from 'mobx-react-lite'
 
@@ -12,7 +12,7 @@ const Navbar = () => {
         <Segment inverted style={{ padding: 0, marginTop: 0 }}>
             <Menu inverted secondary>
                 <Container>
-                    <Menu.Item as={Link} to='/'>
+                    <Menu.Item exact as={NavLink} to='/'>
                         <Header as='h3' style={{ color: 'white', marginTop: 2 }}>
                             Releaf
                             <Icon name='leaf' color='green' />
@@ -22,11 +22,13 @@ const Navbar = () => {
                         {user && isLoggedIn && (
                             <Fragment>
                             <Menu.Item
-                                as={Link}
+                                as={NavLink}
                                 to='/feed'
                                 name='Home'
                             />
                             <Menu.Item
+                                as={NavLink}
+                                to={`/profile/${user.userName}`}
                                 name='Profile'
                             />
                             <Menu.Item>

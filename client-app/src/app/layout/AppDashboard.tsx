@@ -1,17 +1,9 @@
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { Grid } from 'semantic-ui-react'
 import NewsFeed from './NewsFeed'
-import { observer } from 'mobx-react-lite'
 import CreatePost from '../forms/CreatePost'
-import { RootStoreContext } from '../../stores/rootStore'
-import { history } from '../..'
 
 const AppDashboard = () => {
-    const rootStore = useContext(RootStoreContext)
-    const {isLoggedIn} = rootStore.userStore
-
-    if(!isLoggedIn) history.push('/')
-
     return (
         <Fragment>
             <Grid>
@@ -26,4 +18,4 @@ const AppDashboard = () => {
     )
 }
 
-export default observer(AppDashboard)
+export default AppDashboard

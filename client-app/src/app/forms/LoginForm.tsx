@@ -23,7 +23,7 @@ const LoginForm = () => {
             <FinalForm onSubmit={(values: ILoginFormValues) => login(values).catch(error => ({
                 [FORM_ERROR]: error
             }))} validate={validate}
-                render={({ handleSubmit, form, submitError, hasSubmitErrors, dirtySinceLastSubmit, submitting, invalid }) => (
+                render={({ handleSubmit, submitError, hasSubmitErrors, dirtySinceLastSubmit, submitting, invalid }) => (
                     <Form onSubmit={handleSubmit}>
                         <Header content="Login to Releaf" textAlign='center' color='teal' as='h2' />
                         <Field name='email' placeholder='Email...' component={TextInput} />

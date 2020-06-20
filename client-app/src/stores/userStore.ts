@@ -1,5 +1,5 @@
 import { observable, action, runInAction, computed } from "mobx";
-import { IAppUser, ILoginFormValues } from '../app/models/appUser'
+import { IAppUser, ILoginFormValues, IRegisterFormValues } from '../app/models/appUser'
 import { RootStore } from "./rootStore";
 import agent from "../app/api/agent";
 import { history } from "../index";
@@ -29,6 +29,21 @@ export default class UserStore {
             })
         }
         catch (error) {
+            throw error
+        }
+    }
+
+    @action register = async (values: IRegisterFormValues) => {
+        try{
+            let user = await agent.Users.register(values)
+            runInAction(() => {
+                this.user = user
+                window.localStorage.setItem('jwt', this.user.token)
+                this.rootStore.modalStore.closeModal()
+                history.push('/feed')
+            })
+        }
+        catch(error){
             throw error
         }
     }

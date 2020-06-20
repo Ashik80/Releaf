@@ -30,7 +30,7 @@ const CreatePost = () => {
                 <Form.Field>
                     <textarea
                         rows={4}
-                        placeholder='Something on your mind'
+                        placeholder='Something on your mind?'
                         value={text.text} name='text'
                         onChange={(e) => handleChange(e)}
                         style={{marginBottom: 10}}

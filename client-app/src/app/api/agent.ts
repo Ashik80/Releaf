@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 import { IPost, IPostFormValues } from '../models/post'
-import { ILoginFormValues, IAppUser } from '../models/appUser'
+import { ILoginFormValues, IAppUser, IRegisterFormValues } from '../models/appUser'
+import { toast } from 'react-toastify'
+import { IProfile } from '../models/profile'
+import { history } from '../..'
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -15,6 +18,12 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(undefined, errors => {
+    if(!errors.response && errors.message === 'Network Error'){
+        toast.error('Could not connect to server - Please try again later!')
+    }
+    if(errors.response.status === 404){
+        history.push('/notfound')
+    }
     // const { status, config, data } = errors.response
     // if (status === 401) {
     //     history.push('/')
@@ -38,7 +47,12 @@ const Posts = {
 
 const Users = {
     login: (values: ILoginFormValues): Promise<IAppUser> => requests.post('/users/login', values),
+    register: (values: IRegisterFormValues): Promise<IAppUser> => requests.post('/users/register', values),
     currentUser: (): Promise<IAppUser> => requests.get('/users/current')
 }
 
-export default { Posts, Users }
+const Profiles = {
+    getProfile: (userName: string): Promise<IProfile> => requests.get(`/profiles/${userName}`)
+}
+
+export default { Posts, Users, Profiles }

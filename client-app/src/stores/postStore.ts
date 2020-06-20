@@ -60,6 +60,7 @@ export default class PostStore {
                 this.postsRegistry.set(post.postId, post)
                 this.loading = false
             })
+            toast.success("Posted successfully! :)")
         }
         catch (error) {
             console.log(error)

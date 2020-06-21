@@ -1,8 +1,10 @@
+import { IPhoto } from "./photo";
+
 export interface IAppUser {
     userName: string,
     displayName: string,
     token: string,
-    image?: string
+    photo?: IPhoto
 }
 
 export interface ILoginFormValues {

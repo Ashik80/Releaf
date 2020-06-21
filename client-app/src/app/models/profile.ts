@@ -1,3 +1,5 @@
+import { IPhoto } from "./photo";
+
 export interface IProfile {
     userName: string,
     displayName: string,
@@ -5,5 +7,5 @@ export interface IProfile {
     adress?: string,
     dateOfBirth: Date,
     gender: string,
-    image?: string
+    photo?: IPhoto
 }

@@ -32,12 +32,8 @@ export default class PostStore {
             runInAction(() => {
                 posts.forEach(post => {
                     post.postTime = new Date(post.postTime)
-                    post.likes.forEach(user => {
-                        if (user.userName === this.rootStore.userStore.user?.userName) {
-                            post.isLiked = true
-                        }
-                        else post.isLiked = false
-                    })
+                    let liked = post.likes.some(p => p.userName === this.rootStore.userStore.user?.userName)
+                    if(liked) post.isLiked = true
                     this.postsRegistry.set(post.postId, post)
                     this.pageLoader = false
                 })

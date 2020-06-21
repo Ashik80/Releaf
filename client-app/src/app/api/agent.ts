@@ -4,6 +4,7 @@ import { ILoginFormValues, IAppUser, IRegisterFormValues } from '../models/appUs
 import { toast } from 'react-toastify'
 import { IProfile } from '../models/profile'
 import { history } from '../..'
+import { IPhoto } from '../models/photo'
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -36,7 +37,14 @@ const responeBody = (response: AxiosResponse) => response.data
 
 const requests = {
     get: (url: string) => axios.get(url).then(responeBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(responeBody)
+    post: (url: string, body: {}) => axios.post(url, body).then(responeBody),
+    postForm: (url: string, file: Blob) => {
+        let formData = new FormData()
+        formData.append('File', file)
+        return axios.post(url, formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        }).then(responeBody)
+    }
 }
 
 const Posts = {
@@ -55,4 +63,8 @@ const Profiles = {
     getProfile: (userName: string): Promise<IProfile> => requests.get(`/profiles/${userName}`)
 }
 
-export default { Posts, Users, Profiles }
+const Photo = {
+    upload: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos/add', photo)
+}
+
+export default { Posts, Users, Profiles, Photo }

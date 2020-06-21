@@ -8,7 +8,7 @@ namespace Domain
         public Guid PostId { get; set; }
         public string Text { get; set; }
         public DateTime PostTime { get; set; }
-        public AppUser AppUser { get; set; }
-        public ICollection<Like> Likes { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace Domain
         public string Address { get; set; }
         public string Bio { get; set; }
         public string Gender { get; set; }
-        public string Image { get; set; }
-        public ICollection<Post> Posts { get; set; }
-        public ICollection<Like> Likes { get; set; }
+        public virtual Photo Photo { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }

@@ -1,19 +1,30 @@
 import React from 'react'
-import { Card, Icon, Image } from 'semantic-ui-react'
+import { Card, Icon, Image, Button } from 'semantic-ui-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 import { IProfile } from '../../models/profile'
 
 interface IProps {
-    profile: IProfile | null
+    profile: IProfile | null,
+    setEditMode: (value: boolean) => void,
+    isCurrentUser: boolean
 }
-// format(profile?.dateOfBirth, "do MMM, yyyy")
 
-const ProfileCard: React.FC<IProps> = ({profile}) => {
+const ProfileCard: React.FC<IProps> = ({ profile, setEditMode, isCurrentUser }) => {
     return (
         <Card fluid>
-            <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
+            <Image src={profile?.photo?.url || '/Images/user.png'} wrapped ui={false} />
             <Card.Content>
+                {isCurrentUser &&
+                    <Button
+                        onClick={() => setEditMode(true)}
+                        style={{ position: 'relative', top: -15, right: -15 }}
+                        floated='right'
+                        basic size='tiny'
+                        color='teal'
+                        content='Change pic'
+                    />
+                }
                 <Card.Header>{profile?.displayName}</Card.Header>
                 <Card.Meta>
                     <span className='date'>Born in {profile && format(profile.dateOfBirth, "do MMM, yyyy")}</span>

@@ -31,9 +31,9 @@ namespace Application.Posts
             public async Task<PostDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var post = await context.Posts
-                    .Include(p => p.AppUser)
-                    .Include(p => p.Likes)
-                        .ThenInclude(l => l.AppUser)
+                    // .Include(p => p.AppUser)
+                    // .Include(p => p.Likes)
+                    //     .ThenInclude(l => l.AppUser)
                     .FirstOrDefaultAsync(p => p.PostId == request.PostId);
 
                 if (post == null)

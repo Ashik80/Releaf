@@ -6,6 +6,8 @@ using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 namespace Application.Profiles
 {
@@ -18,17 +20,19 @@ namespace Application.Profiles
 
         public class Handler : IRequestHandler<Query, Profile>
         {
-            private readonly UserManager<AppUser> userManager;
             private readonly IMapper mapper;
-            public Handler(UserManager<AppUser> userManager, IMapper mapper)
+            private readonly DataContext context;
+            public Handler(DataContext context, IMapper mapper)
             {
+                this.context = context;
                 this.mapper = mapper;
-                this.userManager = userManager;
             }
 
             public async Task<Profile> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await userManager.FindByNameAsync(request.UserName);
+                var user = await context.Users
+                    // .Include(u => u.Photo)
+                    .FirstOrDefaultAsync(u => u.UserName == request.UserName);
 
                 if (user == null)
                 {

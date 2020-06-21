@@ -33,7 +33,7 @@ const NewsFeed = () => {
                 <Segment key={post.postId}>
                     <Feed>
                         <Feed.Event>
-                            <Feed.Label image='/Images/user.png' />
+                            <Feed.Label image={post.appUser.photo?.url || '/Images/user.png'} />
                             <Feed.Content>
                                 <Feed.Summary>
                                     <Link

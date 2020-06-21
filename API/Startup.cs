@@ -52,6 +52,7 @@ namespace API
 
             services.AddDbContext<DataContext>(opt =>
             {
+                opt.UseLazyLoadingProxies();
                 opt.UseSqlServer(Configuration.GetConnectionString("ReleafConnection"));
             });
 

@@ -1,7 +1,9 @@
+using Application.Photos;
+using Application.Posts;
 using AutoMapper;
 using Domain;
 
-namespace Application.Posts
+namespace Application
 {
     public class MappingProfile : Profile
     {
@@ -14,6 +16,7 @@ namespace Application.Posts
                 .ForMember(l => l.DisplayName, opt => opt.MapFrom(s => s.AppUser.DisplayName));
             
             CreateMap<AppUser, Profiles.Profile>();
+            CreateMap<Photo, PhotoDto>();
         }
     }
 }

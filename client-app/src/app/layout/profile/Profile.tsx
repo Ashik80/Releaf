@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, Fragment } from 'react'
+import React, { useContext, useEffect, Fragment, useState } from 'react'
 import { Grid, Segment } from 'semantic-ui-react'
 import { RootStoreContext } from '../../../stores/rootStore'
 import { RouteComponentProps } from 'react-router-dom'
@@ -6,6 +6,7 @@ import LoadingComponent from '../../common/loader/LoadingComponent'
 import { observer } from 'mobx-react-lite'
 import ProfileCard from './ProfileCard'
 import ProfileTab from './ProfileTab'
+import PhotoUpload from '../photoUpload/PhotoUpload'
 
 interface IProps {
     userName: string
@@ -13,7 +14,8 @@ interface IProps {
 
 const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
     const rootStore = useContext(RootStoreContext)
-    const { loadProfile, profile, loadingProfile } = rootStore.profileStore
+    const { loadProfile, profile, loadingProfile, uploadPhoto, uploading, isCurrentUser } = rootStore.profileStore
+    const [editMode, setEditMode] = useState(false)
 
     useEffect(() => {
         loadProfile(match.params.userName)
@@ -21,7 +23,7 @@ const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
 
     return (
         <Grid>
-            {loadingProfile && !profile ? (
+            {loadingProfile ? (
                 <Grid.Column width={16}>
                     <Segment style={{ height: 150 }}>
                         <LoadingComponent text="Loading Profile..." />
@@ -30,10 +32,15 @@ const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
             ) : (
                 <Fragment>
                     <Grid.Column width={5}>
-                        <ProfileCard profile={profile} />
+                        <ProfileCard setEditMode={setEditMode} isCurrentUser={isCurrentUser} profile={profile} />
                     </Grid.Column>
                     <Grid.Column width={11}>
-                        <ProfileTab />
+                        {editMode ? 
+                            <PhotoUpload
+                                setEditMode={setEditMode}
+                                uploadPhoto={uploadPhoto}
+                                uploading={uploading}
+                            /> : <ProfileTab />} 
                     </Grid.Column>
                 </Fragment>
             )}

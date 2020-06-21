@@ -6,6 +6,7 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Photos
@@ -14,7 +15,7 @@ namespace Application.Photos
     {
         public class Command : IRequest<PhotoDto>
         {
-            public IFormFile file { get; set; }
+            public IFormFile File { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, PhotoDto>
@@ -35,15 +36,33 @@ namespace Application.Photos
             {
                 var user = await userManager.FindByNameAsync(userAccessor.GetCurrentUser());
 
-                var photoUploadResult = photoAccessor.AddPhoto(request.file);
+                var photoExists = await context.Photos.FirstOrDefaultAsync(p => p.AppUserId == user.Id);
 
-                user.Image = photoUploadResult.Url;
+                if (photoExists != null)
+                {
+                    photoAccessor.DeletePhoto(photoExists.Id);
+
+                    context.Photos.Remove(photoExists);
+                }
+
+                var photoUploadResult = photoAccessor.AddPhoto(request.File);
+
+                var photo = new Photo
+                {
+                    Id = photoUploadResult.PublicId,
+                    Url = photoUploadResult.Url,
+                    AppUser = user
+                };
+
+                context.Photos.Add(photo);
 
                 var result = await context.SaveChangesAsync() > 0;
 
-                if(result)
+                if (result)
                 {
-                    return new PhotoDto{
+                    return new PhotoDto
+                    {
+                        Id = photoUploadResult.PublicId,
                         Url = photoUploadResult.Url
                     };
                 }

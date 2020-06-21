@@ -1,5 +1,5 @@
 import { RootStore } from "./rootStore";
-import { observable, action, runInAction } from "mobx";
+import { observable, action, runInAction, computed } from "mobx";
 import { IProfile } from "../app/models/profile";
 import agent from "../app/api/agent";
 
@@ -11,6 +11,14 @@ export default class ProfileStore{
 
     @observable profile: IProfile | null = null
     @observable loadingProfile = false
+    @observable uploading = false
+
+    @computed get isCurrentUser(){
+        if(this.profile && this.rootStore.userStore.user){
+            return this.profile.userName === this.rootStore.userStore.user.userName
+        }
+        else return false
+    }
 
     @action loadProfile = async (userName: string) => {
         this.loadingProfile = true
@@ -28,6 +36,26 @@ export default class ProfileStore{
             console.log(error)
             runInAction(() => {
                 this.loadingProfile = false
+            })
+        }
+    }
+
+    @action uploadPhoto = async (file: Blob) => {
+        this.uploading = true
+        try{
+            let photo = await agent.Photo.upload(file)
+            runInAction(() => {
+                if(this.profile && this.rootStore.userStore.user){
+                    this.profile.photo = photo
+                    this.rootStore.userStore.user.photo = photo
+                    this.uploading = false
+                }
+            })
+        }
+        catch(error){
+            console.log(error)
+            runInAction(() => {
+                this.uploading = false
             })
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using Application.Photos;
 
 namespace Application.Profiles
 {
@@ -10,6 +11,6 @@ namespace Application.Profiles
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
-        public string Image { get; set; }
+        public PhotoDto Photo { get; set; }
     }
 }

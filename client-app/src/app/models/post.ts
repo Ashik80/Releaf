@@ -1,3 +1,5 @@
+import { IPhoto } from "./photo";
+
 export interface IPost {
     postId: string,
     text: string,
@@ -9,7 +11,8 @@ export interface IPost {
 
 export interface IUser {
     userName: string,
-    displayName: string
+    displayName: string,
+    photo?: IPhoto
 }
 
 export interface ILike {

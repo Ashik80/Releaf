@@ -25,12 +25,7 @@ namespace Application.Posts
 
             public async Task<List<PostDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var posts = await context.Posts
-                    // .Include(p => p.AppUser)
-                    //     .ThenInclude(a => a.Photo)
-                    // .Include(p => p.Likes)
-                    //     .ThenInclude(l => l.AppUser)  
-                    .ToListAsync();
+                var posts = await context.Posts.ToListAsync();
 
                 var postdto = mapper.Map<List<Post>, List<PostDto>>(posts);
 

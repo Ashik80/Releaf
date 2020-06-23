@@ -1,10 +1,11 @@
 import React from 'react'
 import { Tab } from 'semantic-ui-react'
+import ProfileAbout from './ProfileAbout'
 
 const panes = [
     {
       menuItem: 'About',
-      render: () => <Tab.Pane attached={false}>Tab 1 Content</Tab.Pane>,
+      render: () => <ProfileAbout />,
     },
     {
       menuItem: 'Posts',

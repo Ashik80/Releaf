@@ -1,4 +1,4 @@
-import React, { useContext, useState, } from 'react'
+import React, { useContext, useState, SyntheticEvent, } from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react'
 import { IPostFormValues } from '../models/post'
 import { RootStoreContext } from '../../stores/rootStore'
@@ -15,7 +15,7 @@ const CreatePost = () => {
         })
     }
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: SyntheticEvent<HTMLFormElement >) => {
         event.preventDefault()
         createPost(text).then(() => {
             setText({

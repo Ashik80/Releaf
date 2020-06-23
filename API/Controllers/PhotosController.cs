@@ -16,9 +16,15 @@ namespace API.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<PhotoDto>> AddPhoto([FromForm]Add.Command command)
+        public async Task<ActionResult<PhotoDto>> AddPhoto([FromForm] Add.Command command)
         {
             return await mediator.Send(command);
+        }
+
+        [HttpDelete("delete/{publicId}")]
+        public async Task<ActionResult<Unit>> DeletePhoto(string publicId)
+        {
+            return await mediator.Send(new Delete.Command { PublicId = publicId });
         }
     }
 }

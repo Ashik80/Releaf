@@ -4,7 +4,7 @@ import { FieldRenderProps } from 'react-final-form'
 
 interface IProps extends FieldRenderProps<string, HTMLInputElement>, FormFieldProps {}
 
-const TextInput: React.FC<IProps> = ({input, placeholder, meta: {touched, error}}) => {
+const TextInput: React.FC<IProps> = ({input, placeholder, width, meta: {touched, error}}) => {
     return (
         <Form.Field error={touched && !!error}>
             <input {...input} placeholder={placeholder} />

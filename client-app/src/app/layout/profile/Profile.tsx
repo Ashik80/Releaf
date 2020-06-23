@@ -14,7 +14,16 @@ interface IProps {
 
 const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
     const rootStore = useContext(RootStoreContext)
-    const { loadProfile, profile, loadingProfile, uploadPhoto, uploading, isCurrentUser } = rootStore.profileStore
+    const { 
+        loadProfile, 
+        profile, 
+        loadingProfile, 
+        uploadPhoto, 
+        uploading, 
+        isCurrentUser,
+        deletePhoto,
+        deleting 
+    } = rootStore.profileStore
     const [editMode, setEditMode] = useState(false)
 
     useEffect(() => {
@@ -32,7 +41,13 @@ const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
             ) : (
                 <Fragment>
                     <Grid.Column width={5}>
-                        <ProfileCard setEditMode={setEditMode} isCurrentUser={isCurrentUser} profile={profile} />
+                        <ProfileCard 
+                            setEditMode={setEditMode} 
+                            isCurrentUser={isCurrentUser} 
+                            profile={profile} 
+                            deletePhoto={deletePhoto}
+                            deleting={deleting}
+                        />
                     </Grid.Column>
                     <Grid.Column width={11}>
                         {editMode ? 

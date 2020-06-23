@@ -8,14 +8,17 @@ import { createBrowserHistory } from 'history'
 import 'react-toastify/dist/ReactToastify.min.css'
 import 'mobx-react-lite/batchingForReactDom'
 import ScrollToTop from './app/common/scroller/ScrollToTop';
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import 'react-widgets/dist/css/react-widgets.css';
+
+dateFnsLocalizer()
 
 export const history = createBrowserHistory()
 
 ReactDOM.render(
   <Router history={history}>
-    <ScrollToTop>
+    <ScrollToTop />
       <App />
-    </ScrollToTop>
   </Router>,
   document.getElementById('root')
 );

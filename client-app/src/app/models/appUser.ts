@@ -4,7 +4,7 @@ export interface IAppUser {
     userName: string,
     displayName: string,
     token: string,
-    photo?: IPhoto
+    photo: IPhoto | null
 }
 
 export interface ILoginFormValues {

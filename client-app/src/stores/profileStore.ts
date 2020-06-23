@@ -2,6 +2,7 @@ import { RootStore } from "./rootStore";
 import { observable, action, runInAction, computed } from "mobx";
 import { IProfile } from "../app/models/profile";
 import agent from "../app/api/agent";
+import { toast } from "react-toastify";
 
 export default class ProfileStore{
     rootStore: RootStore
@@ -12,6 +13,7 @@ export default class ProfileStore{
     @observable profile: IProfile | null = null
     @observable loadingProfile = false
     @observable uploading = false
+    @observable deleting = false
 
     @computed get isCurrentUser(){
         if(this.profile && this.rootStore.userStore.user){
@@ -25,8 +27,6 @@ export default class ProfileStore{
         try{
             let profile = await agent.Profiles.getProfile(userName)
             runInAction(() => {
-                // const date = profile.dateOfBirth.split('T')[0]
-                // profile.dateOfBirth = format(new Date(date), "do MMMM, yyyy")
                 profile.dateOfBirth = new Date(profile.dateOfBirth)
                 this.profile = profile
                 this.loadingProfile = false
@@ -56,6 +56,26 @@ export default class ProfileStore{
             console.log(error)
             runInAction(() => {
                 this.uploading = false
+            })
+        }
+    }
+
+    @action deletePhoto = async (id: string) => {
+        this.deleting = true
+        try {
+            await agent.Photo.deletePhoto(id)
+            runInAction(() => {
+                if(this.profile && this.rootStore.userStore.user){
+                    this.profile.photo = null
+                    this.rootStore.userStore.user.photo = null
+                }
+            })
+        } catch (error){
+            console.log(error)
+            toast.error("Problem deleting photo")
+        } finally {
+            runInAction(() => {
+                this.deleting = false
             })
         }
     }

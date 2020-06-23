@@ -44,7 +44,8 @@ const requests = {
         return axios.post(url, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
         }).then(responeBody)
-    }
+    },
+    del: (url: string) => axios.delete(url).then(responeBody)
 }
 
 const Posts = {
@@ -64,7 +65,8 @@ const Profiles = {
 }
 
 const Photo = {
-    upload: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos/add', photo)
+    upload: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos/add', photo),
+    deletePhoto: (id: string) => requests.del(`/photos/delete/${id}`)
 }
 
 export default { Posts, Users, Profiles, Photo }

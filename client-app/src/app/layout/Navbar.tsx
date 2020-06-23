@@ -32,8 +32,8 @@ const Navbar = () => {
                                 name='Profile'
                             />
                             <Menu.Item>
-                                <Image size='mini' src={user.photo?.url || '/Images/user.png'} circular style={{ marginRight: 5 }} />
-                                <Dropdown pointing text={user?.displayName}>
+                                <Image size='mini' src={(user.photo && user.photo.url) || '/Images/user.png'} circular style={{ marginRight: 5 }} />
+                                <Dropdown pointing text={user.displayName}>
                                     <Dropdown.Menu>
                                         <Dropdown.Item icon='setting' text='Settings' />
                                         <Dropdown.Item icon='power' text='Logout' onClick={logout} />

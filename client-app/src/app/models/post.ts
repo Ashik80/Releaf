@@ -12,7 +12,7 @@ export interface IPost {
 export interface IUser {
     userName: string,
     displayName: string,
-    photo?: IPhoto
+    photo: IPhoto | null
 }
 
 export interface ILike {

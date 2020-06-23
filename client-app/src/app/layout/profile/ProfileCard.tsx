@@ -1,29 +1,45 @@
 import React from 'react'
-import { Card, Icon, Image, Button } from 'semantic-ui-react'
+import { Card, Icon, Image, Dropdown } from 'semantic-ui-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 import { IProfile } from '../../models/profile'
+import { observer } from 'mobx-react-lite'
 
 interface IProps {
     profile: IProfile | null,
     setEditMode: (value: boolean) => void,
-    isCurrentUser: boolean
+    isCurrentUser: boolean,
+    deletePhoto: (id: string) => Promise<void>,
+    deleting: boolean
 }
 
-const ProfileCard: React.FC<IProps> = ({ profile, setEditMode, isCurrentUser }) => {
+const dropdownStyle = {
+    position: 'relative',
+    top: -51,
+    right: -18,
+    float: 'right'
+}
+
+const ProfileCard: React.FC<IProps> = ({ profile, setEditMode, isCurrentUser, deletePhoto, deleting }) => {
     return (
         <Card fluid>
-            <Image src={profile?.photo?.url || '/Images/user.png'} wrapped ui={false} />
+            <Image src={(profile?.photo && profile?.photo.url) || '/Images/user.png'} wrapped ui={false} />
             <Card.Content>
                 {isCurrentUser &&
-                    <Button
-                        onClick={() => setEditMode(true)}
-                        style={{ position: 'relative', top: -15, right: -15 }}
-                        floated='right'
-                        basic size='tiny'
-                        color='teal'
-                        content='Change pic'
-                    />
+                    <Dropdown
+                        button
+                        icon='pencil'
+                        className='icon'
+                        basic
+                        loading={deleting}
+                        pointing='top left'
+                        style={dropdownStyle}
+                    >
+                        <Dropdown.Menu>
+                            <Dropdown.Item text={profile?.photo ? 'Change' : 'Add Photo'} onClick={() => setEditMode(true)} />
+                            {profile?.photo && <Dropdown.Item text='Delete' onClick={() => deletePhoto(profile?.photo!.id)} />}
+                        </Dropdown.Menu>
+                    </Dropdown>
                 }
                 <Card.Header>{profile?.displayName}</Card.Header>
                 <Card.Meta>
@@ -43,4 +59,4 @@ const ProfileCard: React.FC<IProps> = ({ profile, setEditMode, isCurrentUser }) 
     )
 }
 
-export default ProfileCard
+export default observer(ProfileCard)

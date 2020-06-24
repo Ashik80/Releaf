@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Application.Profiles;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -19,6 +20,14 @@ namespace API.Controllers
         public async Task<ActionResult<Profile>> GetProfile(string userName)
         {
             return await mediator.Send(new Details.Query { UserName = userName });
+        }
+
+        [HttpPut("{userName}")]
+        [Authorize(Policy = "IsUserRequirement")]
+        public async Task<ActionResult<Profile>> Update(string userName, Update.Command command)
+        {
+            command.UserName = userName;
+            return await mediator.Send(command);
         }
     }
 }

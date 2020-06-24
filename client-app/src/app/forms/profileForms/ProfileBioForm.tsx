@@ -2,13 +2,8 @@ import React, { useContext } from 'react'
 import { Form as FinalForm, Field } from 'react-final-form'
 import { IProfileFormValues, IProfile } from '../../models/profile'
 import { Form, Button } from 'semantic-ui-react'
-import TextInput from '../../common/formComponents/TextInput'
+import TextAreaInput from '../../common/formComponents/TextAreaInput'
 import { RootStoreContext } from '../../../stores/rootStore'
-import { combineValidators, isRequired } from 'revalidate'
-
-const validate = combineValidators({
-    displayName: isRequired({message: "Display name cannot be empty"})
-})
 
 interface IProps {
     name: string,
@@ -18,7 +13,7 @@ interface IProps {
     type?: string
 }
 
-const ProfileEditForm: React.FC<IProps> = ({name, placeholder, type, setEditMode, profile}) => {
+const ProfileBioForm: React.FC<IProps> = ({name, placeholder, type, setEditMode, profile}) => {
     const initializeForm: IProfileFormValues = {
         displayName: profile?.displayName,
         bio: profile?.bio,
@@ -38,12 +33,11 @@ const ProfileEditForm: React.FC<IProps> = ({name, placeholder, type, setEditMode
 
     return (
         <FinalForm
-            validate={validate}
             initialValues={initializeForm!}
             onSubmit={handleProfileSubmit}
             render={({handleSubmit, submitting, pristine}) => (
                 <Form onSubmit={handleSubmit} style={{marginTop: 10}}>
-                    <Field name={name} placeholder={placeholder} type={type} component={TextInput} />
+                    <Field name={name} placeholder={placeholder} type={type} rows={3} component={TextAreaInput} />
                     <Button disabled={pristine} loading={submitting} content='Save' size='tiny' />
                     <Button content='Cancel' size='tiny' onClick={(e) => {
                         e.preventDefault()
@@ -55,4 +49,4 @@ const ProfileEditForm: React.FC<IProps> = ({name, placeholder, type, setEditMode
     )
 }
 
-export default ProfileEditForm
+export default ProfileBioForm

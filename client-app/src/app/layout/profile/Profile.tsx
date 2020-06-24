@@ -22,7 +22,7 @@ const Profile: React.FC<RouteComponentProps<IProps>> = ({ match }) => {
         uploading, 
         isCurrentUser,
         deletePhoto,
-        deleting 
+        deleting,
     } = rootStore.profileStore
     const [editMode, setEditMode] = useState(false)
 

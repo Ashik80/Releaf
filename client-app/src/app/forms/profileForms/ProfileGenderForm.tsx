@@ -1,6 +1,7 @@
-import React, { useState, SyntheticEvent } from 'react'
+import React, { useState, SyntheticEvent, useContext } from 'react'
 import { IProfileFormValues, IProfile } from '../../models/profile'
 import { Form, Button } from 'semantic-ui-react'
+import { RootStoreContext } from '../../../stores/rootStore'
 
 interface IProps {
     name: string,
@@ -19,20 +20,28 @@ const ProfileGenderForm: React.FC<IProps> = ({ name, type, setEditMode, profile 
     }
 
     const [gender, setGender] = useState({
-        gen: 'Male'
+        gen: (profile ? profile.gender : "Male")
     })
+    const [loading, setLoading] = useState(false)
+
+    const rootStore = useContext(RootStoreContext)
+    const {updateProfile} = rootStore.profileStore
 
     const handleChange = (event: any) => {
         setGender({
             gen: event.currentTarget.value
         })
-        console.log(event.currentTarget.value)
     }
 
     const handleProfileSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setLoading(true)
         initializeForm.gender = gender.gen
-        console.log(initializeForm)
+        if(profile){
+            updateProfile(profile.userName, initializeForm)
+                .then(() => setLoading(false))
+                .then(() => setEditMode(false))
+        }
     }
 
     return (
@@ -42,7 +51,7 @@ const ProfileGenderForm: React.FC<IProps> = ({ name, type, setEditMode, profile 
                 <Form.Field type='radio' control='input' label='Female' name='gender' value='Female' onChange={handleChange} checked={gender.gen === 'Female'} />
                 <Form.Field type='radio' control='input' label='Other' name='gender' value='Other' onChange={handleChange} checked={gender.gen === 'Other'} />
             </Form.Group>
-            <Button content='Save' size='tiny' />
+            <Button loading={loading} content='Save' size='tiny' />
             <Button content='Cancel' size='tiny' onClick={(e) => {
                 e.preventDefault()
                 setEditMode(false)

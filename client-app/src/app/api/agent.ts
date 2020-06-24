@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { IPost, IPostFormValues } from '../models/post'
 import { ILoginFormValues, IAppUser, IRegisterFormValues } from '../models/appUser'
 import { toast } from 'react-toastify'
-import { IProfile } from '../models/profile'
+import { IProfile, IProfileFormValues } from '../models/profile'
 import { history } from '../..'
 import { IPhoto } from '../models/photo'
 
@@ -38,6 +38,7 @@ const responeBody = (response: AxiosResponse) => response.data
 const requests = {
     get: (url: string) => axios.get(url).then(responeBody),
     post: (url: string, body: {}) => axios.post(url, body).then(responeBody),
+    put: (url: string, body: {}) => axios.put(url, body).then(responeBody),
     postForm: (url: string, file: Blob) => {
         let formData = new FormData()
         formData.append('File', file)
@@ -50,7 +51,7 @@ const requests = {
 
 const Posts = {
     list: (): Promise<IPost[]> => requests.get('/posts'),
-    like: (id: string) => requests.post(`/posts/like/${id}`, {}),
+    like: (id: string): Promise<IPost> => requests.post(`/posts/like/${id}`, {}),
     create: (text: IPostFormValues): Promise<IPost> => requests.post('/posts/post', text)
 }
 
@@ -61,7 +62,8 @@ const Users = {
 }
 
 const Profiles = {
-    getProfile: (userName: string): Promise<IProfile> => requests.get(`/profiles/${userName}`)
+    getProfile: (userName: string): Promise<IProfile> => requests.get(`/profiles/${userName}`),
+    update: (userName: string, values: IProfileFormValues): Promise<IProfile> => requests.put(`/profiles/${userName}`, values)
 }
 
 const Photo = {

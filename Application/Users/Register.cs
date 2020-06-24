@@ -63,7 +63,8 @@ namespace Application.Users
                 {
                     DisplayName = request.DisplayName,
                     UserName = request.UserName,
-                    Email = request.Email
+                    Email = request.Email,
+                    DateOfBirth = DateTime.Now.Date
                 };
 
                 var result = await userManager.CreateAsync(user, request.Password);

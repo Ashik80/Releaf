@@ -56,6 +56,14 @@ namespace API
                 opt.UseSqlServer(Configuration.GetConnectionString("ReleafConnection"));
             });
 
+            services.AddAuthorization(opt => {
+                opt.AddPolicy("IsUserRequirement", policy => {
+                    policy.Requirements.Add(new IsUserRequirement());
+                });
+            });
+
+            services.AddTransient<IAuthorizationHandler, IsUserRequirementHandler>();
+
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(List.Handler).Assembly);
 

@@ -5,11 +5,14 @@ import { format } from 'date-fns'
 import ProfileEditForm from '../../forms/profileForms/ProfileEditForm'
 import ProfileDateForm from '../../forms/profileForms/ProfileDateForm'
 import ProfileGenderForm from '../../forms/profileForms/ProfileGenderForm'
+import ProfileBioForm from '../../forms/profileForms/ProfileBioForm'
+import { observer } from 'mobx-react-lite'
 
 const spanStyle = {
     display: 'inline-block',
-    width: 150,
-    fontWeight: 800
+    width: '10vw',
+    fontWeight: 800,
+    verticalAlign: 'top'
 }
 
 const editButton = {
@@ -26,6 +29,7 @@ const ProfileAbout = () => {
     const [editDate, setDateMode] = useState(false)
     const [editAdress, setAdress] = useState(false)
     const [editGender, setGenderMode] = useState(false)
+    const [editBio, setBioMode] = useState(false)
 
     return (
         <Tab.Pane>
@@ -71,12 +75,18 @@ const ProfileAbout = () => {
                     {isCurrentUser && !editAdress && <Button icon='pencil' style={editButton} onClick={() => setAdress(true)} />}
                 </Segment>
                 <Segment vertical>
-                    <span style={spanStyle}>Bio:</span> {profile?.bio}
-                    {isCurrentUser && <Button icon='pencil' style={editButton} />}
+                    <span style={spanStyle}>Bio:</span> {editBio ? 
+                        <ProfileBioForm
+                            name='bio'
+                            profile={profile} 
+                            placeholder='Bio' 
+                            setEditMode={setBioMode} 
+                        /> : <span style={{display: 'inline-block', width: '30vw'}}>{profile?.bio}</span>}
+                    {isCurrentUser && !editBio && <Button icon='pencil' style={editButton} onClick={() => setBioMode(true)} />}
                 </Segment>
             </Container>
         </Tab.Pane>
     )
 }
 
-export default ProfileAbout
+export default observer(ProfileAbout)
